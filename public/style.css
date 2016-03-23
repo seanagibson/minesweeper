@@ -31,10 +31,17 @@ table td{
 
 td {
   text-align: center;
+  width: 24px;
+  height: 24px;
 }
 
-button {
+.buttonContainer {
   margin: auto;
   margin-top: 20px;
   display: table;
+}
+
+button {
+  margin-left: 10px;
+  margin-right: 10px;
 }

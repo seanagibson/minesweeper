@@ -21396,6 +21396,9 @@
 	    },
 	    newGame: function newGame() {
 	      dispatch((0, _gameActions.startNewGame)());
+	    },
+	    revealMines: function revealMines() {
+	      dispatch((0, _gameActions.revealAllCells)());
 	    }
 	  };
 	}
@@ -21437,6 +21440,7 @@
 	  var onCellClick = _ref.onCellClick;
 	  var gameMsg = _ref.gameMsg;
 	  var newGame = _ref.newGame;
+	  var revealMines = _ref.revealMines;
 	
 	
 	  return _react2.default.createElement(
@@ -21464,7 +21468,12 @@
 	        })
 	      )
 	    ),
-	    _react2.default.createElement(_gameButton2.default, { newGame: newGame })
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'buttonContainer' },
+	      _react2.default.createElement(_gameButton2.default, { handleClick: newGame, text: 'New Game' }),
+	      _react2.default.createElement(_gameButton2.default, { handleClick: revealMines, text: 'Reveal Mines' })
+	    )
 	  );
 	};
 	
@@ -21548,16 +21557,13 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var GameButton = function GameButton(_ref) {
-	  var newGame = _ref.newGame;
+	  var handleClick = _ref.handleClick;
+	  var text = _ref.text;
 	
 	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'button',
-	      { onClick: newGame },
-	      'New Game!'
-	    )
+	    'button',
+	    { onClick: handleClick },
+	    text
 	  );
 	};
 	

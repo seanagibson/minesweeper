@@ -1,10 +1,8 @@
 import React from 'react';
 
-const GameButton = function({newGame}){
+const GameButton = function({handleClick, text}){
   return(
-    <div>
-      <button onClick={newGame}>New Game!</button>
-    </div>
+      <button onClick={handleClick}>{text}</button>
   )
 };
 

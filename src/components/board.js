@@ -3,7 +3,7 @@ import BoardTile from './boardTile';
 import GameMsg from './gameMsg';
 import GameButton from './gameButton';
 
-const Board = function({minefield, onCellClick, gameMsg, newGame}){
+const Board = function({minefield, onCellClick, gameMsg, newGame, revealMines}){
 
   return (
     <div className="container">
@@ -22,7 +22,10 @@ const Board = function({minefield, onCellClick, gameMsg, newGame}){
             })}
         </tbody>
       </table>
-      <GameButton newGame={newGame}/>
+      <div className="buttonContainer">
+        <GameButton handleClick={newGame} text={'New Game'}/>
+        <GameButton handleClick={revealMines} text={'Reveal Mines'}/>
+      </div>
     </div>
   );
 };
