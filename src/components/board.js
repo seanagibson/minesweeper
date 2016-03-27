@@ -2,8 +2,10 @@ import React from 'react';
 import BoardTile from './boardTile';
 import GameMsg from './gameMsg';
 import GameButton from './gameButton';
+import GameLevels from './gameLevels';
+import {levels} from '../actions/actionConstants';
 
-const Board = function({minefield, onCellClick, gameMsg, newGame, revealMines}){
+const Board = function({minefield, onCellClick, gameMsg, newGame, revealMines, setLevel}){
 
   return (
     <div className="container">
@@ -23,6 +25,7 @@ const Board = function({minefield, onCellClick, gameMsg, newGame, revealMines}){
         </tbody>
       </table>
       <div className="buttonContainer">
+        <GameLevels data={levels} setLevel={setLevel} />
         <GameButton handleClick={newGame} text={'New Game'}/>
         <GameButton handleClick={revealMines} text={'Reveal Mines'}/>
       </div>

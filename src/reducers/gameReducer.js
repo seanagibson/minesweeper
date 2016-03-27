@@ -1,8 +1,10 @@
-import {INIT_GAME, GAME_OVER, REVEAL_CELL, REVEAL_ALL_CELLS} from '../actions/actionConstants';
-import {initGame, revealMinefieldCells} from './reducerHelper';
+import {INIT_GAME, GAME_OVER, REVEAL_CELL, REVEAL_ALL_CELLS, RECURSIVE_REVEAL_CELLS, SET_LEVEL, levels} from '../actions/actionConstants';
+import {initGame, revealMinefieldCells, recurseReveal} from './reducerHelper';
 
 const initialState = {
   minefield: [],
+  level: levels[0].title,
+  mines: levels[0].mines,
   gameStarted: false,
   gameOver: false,
   gameOverMsg: ''
@@ -11,12 +13,19 @@ const initialState = {
 function gameReducer(state = initialState, action){
   switch (action.type) {
     case INIT_GAME:
-      let newMinefield = initGame([]);
+      let newMinefield = initGame([], state.mines);
       return Object.assign({}, state, {
         minefield: [...newMinefield],
         gameStarted: true,
         gameOver: false,
         gameOverMsg: ''
+      });
+
+    case SET_LEVEL:
+console.log('level, title: ', action.level, levels[action.level].title);
+      return Object.assign({}, state, {
+        level: levels[action.level].title,
+        mines: levels[action.level].mines
       });
 
     case GAME_OVER:
@@ -39,6 +48,12 @@ function gameReducer(state = initialState, action){
       let revealMinefield = revealMinefieldCells(state.minefield);
       return Object.assign({}, state, {
         minefield: [...revealMinefield]
+      });
+
+    case RECURSIVE_REVEAL_CELLS:
+      let recursedMinefield = recurseReveal(state.minefield, action.row, action.col);
+      return Object.assign({}, state, {
+        minefield: [...recursedMinefield]
       });
     default:
       return state;

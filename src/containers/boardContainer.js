@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import Board from '../components/board';
-import {checkCellContents, startNewGame, revealAllCells} from '../actions/gameActions';
+import {checkCellContents, startNewGame, revealAllCells, setLevel} from '../actions/gameActions';
 
 function mapStateToProps(state){
   return {
@@ -19,6 +19,9 @@ function mapDispatchToProps(dispatch){
     },
     revealMines: function(){
       dispatch(revealAllCells());
+    },
+    setLevel: function(level){
+      dispatch(setLevel(level))
     }
   }
 }

@@ -1,9 +1,17 @@
 import * as actions from './actionConstants';
 import {getCellInfo} from '../reducers/reducerHelper';
 
-export function initGameBoard(){
+export function initGameBoard(level){
   return {
-    type: actions.INIT_GAME
+    type: actions.INIT_GAME,
+    level
+  }
+};
+
+export function setLevel(level){
+  return {
+    type: actions.SET_LEVEL,
+    level
   }
 };
 
@@ -22,14 +30,22 @@ export function gameOver(){
 export function revealCell(row, col){
   return {
     type: actions.REVEAL_CELL,
-    row: row,
-    col: col
+    row: Number(row),
+    col: Number(col)
   }
 };
 
 export function revealAllCells(){
   return {
     type: actions.REVEAL_ALL_CELLS
+  }
+};
+
+export function recursivelyRevealCells(row, col){
+  return {
+    type: actions.RECURSIVE_REVEAL_CELLS,
+    row: Number(row),
+    col: Number(col)
   }
 };
 
@@ -42,7 +58,10 @@ export function checkCellContents(row, col){
       dispatch(revealCell(row, col));
       dispatch(gameOver());
       dispatch(revealAllCells());
-    } else {
+    } else if(cell && cell.contains === '0'){
+      dispatch(recursivelyRevealCells(row, col));
+    }
+    else {
       dispatch(revealCell(row, col));
     }
   }

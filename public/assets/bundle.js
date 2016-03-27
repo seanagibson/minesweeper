@@ -21069,6 +21069,8 @@
 	
 	var initialState = {
 	  minefield: [],
+	  level: _actionConstants.levels[0].title,
+	  mines: _actionConstants.levels[0].mines,
 	  gameStarted: false,
 	  gameOver: false,
 	  gameOverMsg: ''
@@ -21080,12 +21082,19 @@
 	
 	  switch (action.type) {
 	    case _actionConstants.INIT_GAME:
-	      var newMinefield = (0, _reducerHelper.initGame)([]);
+	      var newMinefield = (0, _reducerHelper.initGame)([], state.mines);
 	      return Object.assign({}, state, {
 	        minefield: [].concat(_toConsumableArray(newMinefield)),
 	        gameStarted: true,
 	        gameOver: false,
 	        gameOverMsg: ''
+	      });
+	
+	    case _actionConstants.SET_LEVEL:
+	      console.log('level, title: ', action.level, _actionConstants.levels[action.level].title);
+	      return Object.assign({}, state, {
+	        level: _actionConstants.levels[action.level].title,
+	        mines: _actionConstants.levels[action.level].mines
 	      });
 	
 	    case _actionConstants.GAME_OVER:
@@ -21109,6 +21118,12 @@
 	      return Object.assign({}, state, {
 	        minefield: [].concat(_toConsumableArray(revealMinefield))
 	      });
+	
+	    case _actionConstants.RECURSIVE_REVEAL_CELLS:
+	      var recursedMinefield = (0, _reducerHelper.recurseReveal)(state.minefield, action.row, action.col);
+	      return Object.assign({}, state, {
+	        minefield: [].concat(_toConsumableArray(recursedMinefield))
+	      });
 	    default:
 	      return state;
 	  }
@@ -21126,9 +21141,13 @@
 	  value: true
 	});
 	var INIT_GAME = exports.INIT_GAME = 'INIT_GAME';
+	var SET_LEVEL = exports.SET_LEVEL = 'SET_LEVEL';
 	var GAME_OVER = exports.GAME_OVER = 'GAME_OVER';
 	var REVEAL_CELL = exports.REVEAL_CELL = 'REVEAL_CELL';
 	var REVEAL_ALL_CELLS = exports.REVEAL_ALL_CELLS = 'REVEAL_ALL_CELLS';
+	var RECURSIVE_REVEAL_CELLS = exports.RECURSIVE_REVEAL_CELLS = 'RECURSIVE_REVEAL_CELLS';
+	
+	var levels = exports.levels = [{ title: 'Easy', mines: 3 }, { title: 'Medium', mines: 5 }, { title: 'Hard', mines: 10 }];
 
 /***/ },
 /* 181 */
@@ -21142,7 +21161,8 @@
 	exports.initGame = initGame;
 	exports.getCellInfo = getCellInfo;
 	exports.revealMinefieldCells = revealMinefieldCells;
-	function initGame(minefield) {
+	exports.recurseReveal = recurseReveal;
+	function initGame(minefield, mines) {
 	
 	  for (var row = 0; row < 10; row++) {
 	    var tempRow = [];
@@ -21159,13 +21179,12 @@
 	    minefield.push(tempRow);
 	  }
 	
-	  minefield = setMines(minefield);
+	  minefield = setMines(minefield, mines);
 	
 	  return setBoardValues(minefield);
 	};
 	
-	function setMines(minefield) {
-	  var numMines = 3;
+	function setMines(minefield, numMines) {
 	
 	  while (numMines > 0) {
 	    var mineRow = Math.floor(Math.random() * 10);
@@ -21259,6 +21278,81 @@
 	  }
 	  return tempMinefield;
 	};
+	
+	function recurseReveal(minefield, r, c) {
+	  var tempMinefield = minefield.slice();
+	
+	  function recurseMinefield(row, col) {
+	    tempMinefield[row][col].isRevealed = true;
+	
+	    var topCell = getCellInfo(tempMinefield, row - 1, col);
+	    if (topCell && topCell.contains === '0' && !topCell.isRevealed) {
+	      recurseMinefield(row - 1, col);
+	    } else if (topCell && topCell.contains !== 'M' && !topCell.isRevealed) {
+	      tempMinefield[topCell.row][topCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var topLeftCell = getCellInfo(tempMinefield, row - 1, col - 1);
+	    if (topLeftCell && topLeftCell.contains === '0' && !topLeftCell.isRevealed) {
+	      recurseMinefield(row - 1, col - 1);
+	    } else if (topLeftCell && topLeftCell.contains !== 'M' && !topLeftCell.isRevealed) {
+	      tempMinefield[topLeftCell.row][topLeftCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var topRightCell = getCellInfo(tempMinefield, row - 1, col + 1);
+	    if (topRightCell && topRightCell.contains === '0' && !topRightCell.isRevealed) {
+	      recurseMinefield(row - 1, col + 1);
+	    } else if (topRightCell && topRightCell.contains !== 'M' && !topRightCell.isRevealed) {
+	      tempMinefield[topRightCell.row][topRightCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var leftCell = getCellInfo(tempMinefield, row, col - 1);
+	    if (leftCell && leftCell.contains === '0' && !leftCell.isRevealed) {
+	      recurseMinefield(row, col - 1);
+	    } else if (leftCell && leftCell.contains !== 'M' && !leftCell.isRevealed) {
+	      tempMinefield[leftCell.row][leftCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var rightCell = getCellInfo(tempMinefield, row, col + 1);
+	    if (rightCell && rightCell.contains === '0' && !rightCell.isRevealed) {
+	      recurseMinefield(row, col + 1);
+	    } else if (rightCell && rightCell.contains !== 'M' && !rightCell.isRevealed) {
+	      tempMinefield[rightCell.row][rightCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var bottomCell = getCellInfo(tempMinefield, row + 1, col);
+	    if (bottomCell && bottomCell.contains === '0' && !bottomCell.isRevealed) {
+	      recurseMinefield(row + 1, col);
+	    } else if (bottomCell && bottomCell.contains === 'M' && !bottomCell.isRevealed) {
+	      tempMinefield[bottomCell.row][bottomCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var bottomLeftCell = getCellInfo(tempMinefield, row + 1, col - 1);
+	    if (bottomLeftCell && bottomLeftCell.contains === '0' && !bottomLeftCell.isRevealed) {
+	      recurseMinefield(row + 1, col - 1);
+	    } else if (bottomLeftCell && bottomLeftCell.contains !== 'M' && !bottomLeftCell.isRevealed) {
+	      tempMinefield[bottomLeftCell.row][bottomLeftCell.col].isRevealed = true;
+	      return;
+	    }
+	
+	    var bottomRightCell = getCellInfo(tempMinefield, row + 1, col + 1);
+	    if (bottomRightCell && bottomRightCell.contains === '0' && !bottomRightCell.isRevealed) {
+	      recurseMinefield(row + 1, col + 1);
+	    } else if (bottomRightCell && bottomRightCell.contains !== 'M' && !bottomRightCell.isRevealed) {
+	      tempMinefield[bottomRightCell.row][bottomRightCell.col].isRevealed = true;
+	      return;
+	    }
+	  }
+	
+	  recurseMinefield(r, c);
+	  return tempMinefield;
+	}
 
 /***/ },
 /* 182 */
@@ -21270,10 +21364,12 @@
 	  value: true
 	});
 	exports.initGameBoard = initGameBoard;
+	exports.setLevel = setLevel;
 	exports.startNewGame = startNewGame;
 	exports.gameOver = gameOver;
 	exports.revealCell = revealCell;
 	exports.revealAllCells = revealAllCells;
+	exports.recursivelyRevealCells = recursivelyRevealCells;
 	exports.checkCellContents = checkCellContents;
 	
 	var _actionConstants = __webpack_require__(180);
@@ -21284,9 +21380,17 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	function initGameBoard() {
+	function initGameBoard(level) {
 	  return {
-	    type: actions.INIT_GAME
+	    type: actions.INIT_GAME,
+	    level: level
+	  };
+	};
+	
+	function setLevel(level) {
+	  return {
+	    type: actions.SET_LEVEL,
+	    level: level
 	  };
 	};
 	
@@ -21305,14 +21409,22 @@
 	function revealCell(row, col) {
 	  return {
 	    type: actions.REVEAL_CELL,
-	    row: row,
-	    col: col
+	    row: Number(row),
+	    col: Number(col)
 	  };
 	};
 	
 	function revealAllCells() {
 	  return {
 	    type: actions.REVEAL_ALL_CELLS
+	  };
+	};
+	
+	function recursivelyRevealCells(row, col) {
+	  return {
+	    type: actions.RECURSIVE_REVEAL_CELLS,
+	    row: Number(row),
+	    col: Number(col)
 	  };
 	};
 	
@@ -21326,6 +21438,8 @@
 	      dispatch(revealCell(row, col));
 	      dispatch(gameOver());
 	      dispatch(revealAllCells());
+	    } else if (cell && cell.contains === '0') {
+	      dispatch(recursivelyRevealCells(row, col));
 	    } else {
 	      dispatch(revealCell(row, col));
 	    }
@@ -21399,6 +21513,9 @@
 	    },
 	    revealMines: function revealMines() {
 	      dispatch((0, _gameActions.revealAllCells)());
+	    },
+	    setLevel: function setLevel(level) {
+	      dispatch((0, _gameActions.setLevel)(level));
 	    }
 	  };
 	}
@@ -21433,6 +21550,12 @@
 	
 	var _gameButton2 = _interopRequireDefault(_gameButton);
 	
+	var _gameLevels = __webpack_require__(189);
+	
+	var _gameLevels2 = _interopRequireDefault(_gameLevels);
+	
+	var _actionConstants = __webpack_require__(180);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Board = function Board(_ref) {
@@ -21441,6 +21564,7 @@
 	  var gameMsg = _ref.gameMsg;
 	  var newGame = _ref.newGame;
 	  var revealMines = _ref.revealMines;
+	  var setLevel = _ref.setLevel;
 	
 	
 	  return _react2.default.createElement(
@@ -21471,6 +21595,7 @@
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'buttonContainer' },
+	      _react2.default.createElement(_gameLevels2.default, { data: _actionConstants.levels, setLevel: setLevel }),
 	      _react2.default.createElement(_gameButton2.default, { handleClick: newGame, text: 'New Game' }),
 	      _react2.default.createElement(_gameButton2.default, { handleClick: revealMines, text: 'Reveal Mines' })
 	    )
@@ -21568,6 +21693,43 @@
 	};
 	
 	exports.default = GameButton;
+
+/***/ },
+/* 189 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var GameLevels = function GameLevels(_ref) {
+	  var setLevel = _ref.setLevel;
+	  var data = _ref.data;
+	
+	  return _react2.default.createElement(
+	    'select',
+	    { onChange: function onChange(e) {
+	        setLevel(e.target.value);
+	      } },
+	    data.map(function (level, index) {
+	      return _react2.default.createElement(
+	        'option',
+	        { key: index, value: index },
+	        level.title
+	      );
+	    })
+	  );
+	};
+	
+	exports.default = GameLevels;
 
 /***/ }
 /******/ ]);

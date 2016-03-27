@@ -1,5 +1,5 @@
 
-export function initGame(minefield){
+export function initGame(minefield, mines){
 
   for(let row = 0; row < 10; row++){
     var tempRow = [];
@@ -16,14 +16,13 @@ export function initGame(minefield){
     minefield.push(tempRow);
   }
 
-  minefield = setMines(minefield);
+  minefield = setMines(minefield, mines);
 
   return setBoardValues(minefield);
 };
 
 
-function setMines(minefield){
-  let numMines = 3;
+function setMines(minefield, numMines){
 
   while(numMines > 0){
     let mineRow = Math.floor(Math.random() * 10);
@@ -120,3 +119,78 @@ export function revealMinefieldCells(minefield){
   }
   return tempMinefield;
 };
+
+export function recurseReveal(minefield, r, c){
+  let tempMinefield = minefield.slice();
+
+  function recurseMinefield(row, col){
+    tempMinefield[row][col].isRevealed = true;
+
+    let topCell = getCellInfo(tempMinefield, row - 1, col);
+    if(topCell && topCell.contains === '0' && !topCell.isRevealed){
+      recurseMinefield(row - 1, col);
+    } else if(topCell && topCell.contains !== 'M' && !topCell.isRevealed){
+      tempMinefield[topCell.row][topCell.col].isRevealed = true;
+      return;
+    }
+
+    let topLeftCell = getCellInfo(tempMinefield, row - 1, col - 1);
+    if(topLeftCell && topLeftCell.contains === '0' && !topLeftCell.isRevealed){
+      recurseMinefield(row - 1, col - 1);
+    } else if(topLeftCell && topLeftCell.contains !== 'M' && !topLeftCell.isRevealed){
+      tempMinefield[topLeftCell.row][topLeftCell.col].isRevealed = true;
+      return;
+    }
+
+    let topRightCell = getCellInfo(tempMinefield, row - 1, col + 1);
+    if(topRightCell && topRightCell.contains === '0' && !topRightCell.isRevealed){
+      recurseMinefield(row - 1, col + 1);
+    }else if(topRightCell && topRightCell.contains !== 'M' && !topRightCell.isRevealed){
+      tempMinefield[topRightCell.row][topRightCell.col].isRevealed = true;
+      return;
+    }
+
+    let leftCell = getCellInfo(tempMinefield, row, col - 1);
+    if(leftCell && leftCell.contains === '0' && !leftCell.isRevealed){
+      recurseMinefield(row, col - 1);
+    } else if (leftCell && leftCell.contains !== 'M' && !leftCell.isRevealed) {
+      tempMinefield[leftCell.row][leftCell.col].isRevealed = true;
+      return;
+    }
+
+    let rightCell = getCellInfo(tempMinefield, row, col + 1);
+    if(rightCell && rightCell.contains === '0' && !rightCell.isRevealed){
+      recurseMinefield(row, col + 1);
+    } else if (rightCell && rightCell.contains !== 'M' && !rightCell.isRevealed) {
+      tempMinefield[rightCell.row][rightCell.col].isRevealed = true;
+      return;
+    }
+
+    let bottomCell = getCellInfo(tempMinefield, row + 1, col);
+    if(bottomCell && bottomCell.contains === '0' && !bottomCell.isRevealed){
+      recurseMinefield(row + 1, col);
+    } else if (bottomCell && bottomCell.contains === 'M' && !bottomCell.isRevealed) {
+      tempMinefield[bottomCell.row][bottomCell.col].isRevealed = true;
+      return;
+    }
+
+    let bottomLeftCell = getCellInfo(tempMinefield, row + 1, col - 1);
+    if(bottomLeftCell && bottomLeftCell.contains === '0' && !bottomLeftCell.isRevealed){
+      recurseMinefield(row + 1, col - 1);
+    } else if(bottomLeftCell && bottomLeftCell.contains !== 'M' && !bottomLeftCell.isRevealed){
+      tempMinefield[bottomLeftCell.row][bottomLeftCell.col].isRevealed = true;
+      return;
+    }
+
+    let bottomRightCell = getCellInfo(tempMinefield, row + 1, col + 1);
+    if(bottomRightCell && bottomRightCell.contains === '0' && !bottomRightCell.isRevealed){
+      recurseMinefield(row + 1, col + 1);
+    } else if (bottomRightCell && bottomRightCell.contains !== 'M' && !bottomRightCell.isRevealed) {
+      tempMinefield[bottomRightCell.row][bottomRightCell.col].isRevealed = true;
+      return;
+    }
+  }
+
+  recurseMinefield(r, c);
+  return tempMinefield
+}
