@@ -131,7 +131,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row - 1, col);
     } else if(topCell && topCell.contains !== 'M' && !topCell.isRevealed){
       tempMinefield[topCell.row][topCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let topLeftCell = getCellInfo(tempMinefield, row - 1, col - 1);
@@ -139,7 +139,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row - 1, col - 1);
     } else if(topLeftCell && topLeftCell.contains !== 'M' && !topLeftCell.isRevealed){
       tempMinefield[topLeftCell.row][topLeftCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let topRightCell = getCellInfo(tempMinefield, row - 1, col + 1);
@@ -147,7 +147,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row - 1, col + 1);
     }else if(topRightCell && topRightCell.contains !== 'M' && !topRightCell.isRevealed){
       tempMinefield[topRightCell.row][topRightCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let leftCell = getCellInfo(tempMinefield, row, col - 1);
@@ -155,7 +155,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row, col - 1);
     } else if (leftCell && leftCell.contains !== 'M' && !leftCell.isRevealed) {
       tempMinefield[leftCell.row][leftCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let rightCell = getCellInfo(tempMinefield, row, col + 1);
@@ -163,7 +163,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row, col + 1);
     } else if (rightCell && rightCell.contains !== 'M' && !rightCell.isRevealed) {
       tempMinefield[rightCell.row][rightCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let bottomCell = getCellInfo(tempMinefield, row + 1, col);
@@ -171,7 +171,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row + 1, col);
     } else if (bottomCell && bottomCell.contains === 'M' && !bottomCell.isRevealed) {
       tempMinefield[bottomCell.row][bottomCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let bottomLeftCell = getCellInfo(tempMinefield, row + 1, col - 1);
@@ -179,7 +179,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row + 1, col - 1);
     } else if(bottomLeftCell && bottomLeftCell.contains !== 'M' && !bottomLeftCell.isRevealed){
       tempMinefield[bottomLeftCell.row][bottomLeftCell.col].isRevealed = true;
-      return;
+      //return;
     }
 
     let bottomRightCell = getCellInfo(tempMinefield, row + 1, col + 1);
@@ -187,7 +187,7 @@ export function recurseReveal(minefield, r, c){
       recurseMinefield(row + 1, col + 1);
     } else if (bottomRightCell && bottomRightCell.contains !== 'M' && !bottomRightCell.isRevealed) {
       tempMinefield[bottomRightCell.row][bottomRightCell.col].isRevealed = true;
-      return;
+      //return;
     }
   }
 

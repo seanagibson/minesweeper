@@ -21290,7 +21290,7 @@
 	      recurseMinefield(row - 1, col);
 	    } else if (topCell && topCell.contains !== 'M' && !topCell.isRevealed) {
 	      tempMinefield[topCell.row][topCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var topLeftCell = getCellInfo(tempMinefield, row - 1, col - 1);
@@ -21298,7 +21298,7 @@
 	      recurseMinefield(row - 1, col - 1);
 	    } else if (topLeftCell && topLeftCell.contains !== 'M' && !topLeftCell.isRevealed) {
 	      tempMinefield[topLeftCell.row][topLeftCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var topRightCell = getCellInfo(tempMinefield, row - 1, col + 1);
@@ -21306,7 +21306,7 @@
 	      recurseMinefield(row - 1, col + 1);
 	    } else if (topRightCell && topRightCell.contains !== 'M' && !topRightCell.isRevealed) {
 	      tempMinefield[topRightCell.row][topRightCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var leftCell = getCellInfo(tempMinefield, row, col - 1);
@@ -21314,7 +21314,7 @@
 	      recurseMinefield(row, col - 1);
 	    } else if (leftCell && leftCell.contains !== 'M' && !leftCell.isRevealed) {
 	      tempMinefield[leftCell.row][leftCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var rightCell = getCellInfo(tempMinefield, row, col + 1);
@@ -21322,7 +21322,7 @@
 	      recurseMinefield(row, col + 1);
 	    } else if (rightCell && rightCell.contains !== 'M' && !rightCell.isRevealed) {
 	      tempMinefield[rightCell.row][rightCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var bottomCell = getCellInfo(tempMinefield, row + 1, col);
@@ -21330,7 +21330,7 @@
 	      recurseMinefield(row + 1, col);
 	    } else if (bottomCell && bottomCell.contains === 'M' && !bottomCell.isRevealed) {
 	      tempMinefield[bottomCell.row][bottomCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var bottomLeftCell = getCellInfo(tempMinefield, row + 1, col - 1);
@@ -21338,7 +21338,7 @@
 	      recurseMinefield(row + 1, col - 1);
 	    } else if (bottomLeftCell && bottomLeftCell.contains !== 'M' && !bottomLeftCell.isRevealed) {
 	      tempMinefield[bottomLeftCell.row][bottomLeftCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	
 	    var bottomRightCell = getCellInfo(tempMinefield, row + 1, col + 1);
@@ -21346,7 +21346,7 @@
 	      recurseMinefield(row + 1, col + 1);
 	    } else if (bottomRightCell && bottomRightCell.contains !== 'M' && !bottomRightCell.isRevealed) {
 	      tempMinefield[bottomRightCell.row][bottomRightCell.col].isRevealed = true;
-	      return;
+	      //return;
 	    }
 	  }
 	
@@ -21624,10 +21624,11 @@
 	  var cellData = _ref.cellData;
 	  var onCellClick = _ref.onCellClick;
 	
+	
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    cellData.isRevealed === true ? cellData.contains : _react2.default.createElement('img', { src: '../assets/minesweeper.png', onClick: onCellClick.bind(null, cellData.row, cellData.col) })
+	    !cellData.isRevealed ? _react2.default.createElement('img', { src: '../assets/minesweeper.png', onClick: onCellClick.bind(null, cellData.row, cellData.col) }) : cellData.contains === '0' ? '' : cellData.contains
 	  );
 	};
 	
