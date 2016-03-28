@@ -21627,7 +21627,7 @@
 	
 	  return _react2.default.createElement(
 	    'div',
-	    null,
+	    { className: 'boardTile' },
 	    !cellData.isRevealed ? _react2.default.createElement('img', { src: '../assets/minesweeper.png', onClick: onCellClick.bind(null, cellData.row, cellData.col) }) : cellData.contains === '0' ? '' : cellData.contains
 	  );
 	};

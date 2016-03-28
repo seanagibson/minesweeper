@@ -1,8 +1,41 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic");
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+html{
+  font-family: sans-serif;
+}
+
 body{
   width: 100%;
   height: 100%;
   margin: 0;
   display: table;
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+nav{
+  border-bottom: 1px solid #ddd;
+}
+
+i{
+  color: black;
+}
+
+div.nav-header{
+  float: left;
+  height: 40px;
+  padding: 15px 15px;
+  font-size: 18px;
+}
+
+div.nav-links{
+  float: right !important;
+  height: 40px;
+  padding: 15px 15px;
 }
 
 div #app{
@@ -29,10 +62,21 @@ table td{
   border:1px solid black;
 }
 
+tr{
+  height: 24px;
+}
+
 td {
   text-align: center;
   width: 24px;
   height: 24px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.boardTile {
+  height: 24px;
+  width: 24px;
 }
 
 .buttonContainer {
@@ -42,6 +86,21 @@ td {
 }
 
 button {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  color: #ffffff;
+  background-color: #4e5d6c;
+  border-color: transparent;
+  border-radius: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+select {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 0;
 }
