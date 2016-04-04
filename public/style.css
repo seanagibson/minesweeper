@@ -28,14 +28,14 @@ i{
 div.nav-header{
   float: left;
   height: 40px;
-  padding: 15px 15px;
+  padding: 15px 15px 15px 30px;
   font-size: 18px;
 }
 
 div.nav-links{
   float: right !important;
   height: 40px;
-  padding: 15px 15px;
+  padding: 15px 30px 15px 15px;
 }
 
 div #app{
